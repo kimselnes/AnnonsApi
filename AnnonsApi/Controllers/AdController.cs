@@ -1,5 +1,6 @@
 ﻿using AnnonsApi.Data;
 using AnnonsApi.Entities;
+using AnnonsApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,14 +40,19 @@ namespace AnnonsApi.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Ad>> CreateAd(Ad newAd)
+        public async Task<ActionResult<Ad>> CreateAd(NewAd newAd)
         {
-            newAd.Id = 0;
+            var ad = new Ad
+            {
+                Title = newAd.Title,
+                Description = newAd.Description,
+                Price = newAd.Price
+            };
 
-            _dbContext.Ads.Add(newAd);
+            _dbContext.Ads.Add(ad);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetAd), new { id = newAd.Id }, newAd);
+            return CreatedAtAction(nameof(GetAd), new { id = ad.Id }, ad);
         }
 
 
@@ -67,14 +73,10 @@ namespace AnnonsApi.Controllers
 
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<Ad>> UpdateAd(int id, Ad updatedAd)
+        public async Task<ActionResult<Ad>> UpdateAd(int id, UpdateAd updatedAd)
         {
-            if (id != updatedAd.Id)
-            {
-                return BadRequest("Must assign correct Id!");
-            }
-
             var existingAd = await _dbContext.Ads.FindAsync(id);
+
             if (existingAd == null)
             {
                 return NotFound();
