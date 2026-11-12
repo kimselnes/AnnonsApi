@@ -123,7 +123,11 @@ namespace AnnonsApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            existingAd.Title = updateAd.Title!;
+            // För att slippa krash vid null-värden
+            // använder vi null-coalescing operatorn
+            // för att behålla befintliga värden om de inte uppdateras.
+            // :D
+            existingAd.Title = updateAd.Title;
             existingAd.Description = updateAd.Description ?? existingAd.Description;
             existingAd.Price = updateAd.Price ?? existingAd.Price;
 
