@@ -2,6 +2,7 @@
 using AnnonsApi.Entities;
 using AnnonsApi.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -91,5 +92,49 @@ namespace AnnonsApi.Controllers
             return Ok(existingAd);
         }
 
+
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<Ad>> PatchAd(int id, JsonPatchDocument<PatchAd> patchAd)
+        {
+            var existingAd = await _dbContext.Ads.FindAsync(id);
+
+            if (existingAd == null)
+            {
+                return NotFound();
+            }
+
+            var updateAd = new PatchAd
+            {
+                Title = existingAd.Title,
+                Description = existingAd.Description,
+                Price = existingAd.Price
+            };
+
+            patchAd.ApplyTo(updateAd, error =>
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    error.ErrorMessage
+                );
+            });
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            existingAd.Title = updateAd.Title!;
+            existingAd.Description = updateAd.Description ?? existingAd.Description;
+            existingAd.Price = updateAd.Price ?? existingAd.Price;
+
+            if (!TryValidateModel(existingAd))
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(existingAd);
+        }
     }
 }
