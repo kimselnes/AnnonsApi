@@ -49,5 +49,45 @@ namespace AnnonsApi.Controllers
             return CreatedAtAction(nameof(GetAd), new { id = newAd.Id }, newAd);
         }
 
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> DeleteAd(int id)
+        {
+            var ad = await _dbContext.Ads.FindAsync(id);
+            if (ad == null)
+            {
+                return NotFound();
+            }
+
+            _dbContext.Ads.Remove(ad);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<Ad>> UpdateAd(int id, Ad updatedAd)
+        {
+            if (id != updatedAd.Id)
+            {
+                return BadRequest("Must assign correct Id!");
+            }
+
+            var existingAd = await _dbContext.Ads.FindAsync(id);
+            if (existingAd == null)
+            {
+                return NotFound();
+            }
+
+            existingAd.Title = updatedAd.Title;
+            existingAd.Description = updatedAd.Description;
+            existingAd.Price = updatedAd.Price;
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(existingAd);
+        }
+
     }
 }

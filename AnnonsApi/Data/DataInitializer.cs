@@ -26,7 +26,7 @@ namespace AnnonsApi.Data
                 _dbContext.Add(new Ad
                 {
                     Title = "Playstation 5",
-                    Desciption = "Sony's senaste konsol, nu med fler polygoner.",
+                    Description = "Sony's senaste konsol, nu med fler polygoner.",
                     Price = 599.99m,
                 });
             }
@@ -36,7 +36,7 @@ namespace AnnonsApi.Data
                 _dbContext.Add(new Ad
                 {
                     Title = "Trocadero Zero",
-                    Desciption = "Be a hero, drink Zero!",
+                    Description = "Be a hero, drink Zero!",
                     Price = 5.50m,
                 });
             }
@@ -46,7 +46,7 @@ namespace AnnonsApi.Data
                 _dbContext.Add(new Ad
                 {
                     Title = "Bok",
-                    Desciption = "Bok med text.",
+                    Description = "Bok med text.",
                     Price = 69m,
                 });
             }

@@ -11,7 +11,7 @@ namespace AnnonsApi.Entities
         public string Title { get; set; } = string.Empty;
 
         [MaxLength(1000)]
-        public string Desciption { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
 
         [Range(0, 10000000)]
         public decimal Price { get; set; }
